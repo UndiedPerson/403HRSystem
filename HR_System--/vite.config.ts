@@ -12,5 +12,5 @@ export default defineConfig({
       }
     }
   },
-  base: '/',
+  base: '/HrSystem_project/Human-Resource-Management-System_System_Analysis_and_Design_Project/HR_System--/',
 })
