@@ -26,8 +26,12 @@ const error = ref('')
 async function handleLogin() {
   error.value = ''
   try {
-    // ส่งข้อมูลไปยัง PHP API
-    const res = await fetch('/api/login.php', {
+    // ใช้ BASE_URL จาก vite เพื่อให้ได้ path ที่ถูกต้องตามสภาพแวดล้อม
+    const apiPath = import.meta.env.VITE_APP_ENV === 'development' 
+      ? '/api/login.php' // สำหรับการพัฒนาใช้ proxy ไปที่ XAMPP
+      : import.meta.env.BASE_URL + 'api/login.php' // สำหรับ production ใช้ base path ตามที่กำหนด
+
+    const res = await fetch(apiPath, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: username.value, password: password.value })
@@ -35,10 +39,9 @@ async function handleLogin() {
 
     const data = await res.json()
 
-    // ตรวจสอบผลลัพธ์จาก PHP
     if (data.success) {
       alert('Login successful!')
-      // ทำการ redirect หรือการกระทำอื่นๆ ที่ต้องการ
+      // Redirect หรือกระทำอื่น ๆ ตามต้องการ
     } else {
       error.value = 'Invalid username or password'
     }
