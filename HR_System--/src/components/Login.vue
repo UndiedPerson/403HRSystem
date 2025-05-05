@@ -1,15 +1,14 @@
-<!-- src/components/Login.vue -->
 <template>
   <div class="login-box">
     <h2>Login</h2>
     <form @submit.prevent="handleLogin">
       <div class="input-group">
-        <label for="username">Username</label><br>
-        <input id="username" v-model="username" type="text" required /><br>
+        <label for="username">Username</label><br />
+        <input id="username" v-model="username" type="text" required /><br />
       </div>
       <div class="input-group">
-        <label for="password">Password</label><br>
-        <input id="password" v-model="password" type="password" required /><br><br>
+        <label for="password">Password</label><br />
+        <input id="password" v-model="password" type="password" required /><br /><br />
       </div>
       <button type="submit">Login</button>
     </form>
@@ -27,21 +26,19 @@ const error = ref('')
 async function handleLogin() {
   error.value = ''
   try {
-    // จำลองการส่งข้อมูลไปยัง PHP
-    const res = await fetch('http://localhost:5173/HrSystem_project/Human-Resource-Management-System_System_Analysis_and_Design_Project/HR_System--/api/login.php', {
+    // ส่งข้อมูลไปยัง PHP API
+    const res = await fetch('/api/login.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username: username.value,
-        password: password.value
-      })
+      body: JSON.stringify({ username: username.value, password: password.value })
     })
 
     const data = await res.json()
 
-    // จำลองการตรวจสอบผลจาก PHP (โดยไม่เชื่อมฐานข้อมูล)
+    // ตรวจสอบผลลัพธ์จาก PHP
     if (data.success) {
       alert('Login successful!')
+      // ทำการ redirect หรือการกระทำอื่นๆ ที่ต้องการ
     } else {
       error.value = 'Invalid username or password'
     }
@@ -62,7 +59,7 @@ async function handleLogin() {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 h2 {
-  background: #4caf50;
+  background: #9101FF;
   color: white;
   margin: -20px -20px 20px;
   padding: 15px;
@@ -82,13 +79,13 @@ input {
 button {
   width: 100%;
   padding: 10px;
-  background-color: #4caf50;
+  background-color: #019EFF;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 button:hover {
-  background-color: #45a049;
+  background-color: #3E8DBE;
 }
 </style>

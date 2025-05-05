@@ -1,15 +1,21 @@
 <?php
-header('Content-Type: application/json');
+// เช็คว่า request เป็น POST หรือไม่
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // รับข้อมูลที่ส่งมาจาก Vue
+    $data = json_decode(file_get_contents('php://input'), true);
+    
+    // ตรวจสอบข้อมูลที่รับมา
+    $username = $data['username'] ?? '';
+    $password = $data['password'] ?? '';
 
-// รับข้อมูล JSON ที่ส่งจาก Vue
-$data = json_decode(file_get_contents("php://input"));
-
-$username = $data->username;
-$password = $data->password;
-
-// ตรวจสอบข้อมูล (จำลองผลโดยไม่ใช้ฐานข้อมูล)
-if ($username === 'admin' && $password === 'password') {
-    echo json_encode(['success' => true]);
+    // สมมุติว่าเรามี username = 'admin' และ password = '1234' สำหรับการทดสอบ
+    if ($username === 'admin' && $password === '1234') {
+        // ส่งผลลัพธ์ JSON กลับไป
+        echo json_encode(['success' => true]);
+    } else {
+        // ถ้า username หรือ password ผิด
+        echo json_encode(['success' => false]);
+    }
 } else {
     echo json_encode(['success' => false]);
 }
