@@ -1,13 +1,12 @@
-<!-- src/App.vue -->
-<script setup>
-import Login from './components/Login.vue'
-</script>
-
 <template>
   <div id="app">
-    <Login />
+    <router-view />
   </div>
 </template>
+
+<script setup>
+import { RouterView } from 'vue-router';
+</script>
 
 <style scoped>
 #app {

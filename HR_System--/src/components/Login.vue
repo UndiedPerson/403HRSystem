@@ -17,36 +17,42 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
-const username = ref('')
-const password = ref('')
-const error = ref('')
+const username = ref('');
+const password = ref('');
+const error = ref('');
+const router = useRouter();
+
+onMounted(() => {
+  // ตรวจสอบว่า router พร้อมใช้งานหรือไม่ (โดยทั่วไปไม่จำเป็นต้องทำใน setup)
+});
 
 async function handleLogin() {
-  error.value = ''
+  error.value = '';
   try {
-    // ใช้ BASE_URL จาก vite เพื่อให้ได้ path ที่ถูกต้องตามสภาพแวดล้อม
-    const apiPath = import.meta.env.VITE_APP_ENV === 'development' 
-      ? '/api/login.php' // สำหรับการพัฒนาใช้ proxy ไปที่ XAMPP
-      : import.meta.env.BASE_URL + 'api/login.php' // สำหรับ production ใช้ base path ตามที่กำหนด
+    const apiPath = import.meta.env.VITE_APP_ENV === 'development'
+      ? '/api/login.php'
+      : import.meta.env.BASE_URL + 'api/login.php';
 
     const res = await fetch(apiPath, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: username.value, password: password.value })
-    })
+      body: JSON.stringify({ username: username.value, password: password.value }),
+    });
 
-    const data = await res.json()
+    const data = await res.json();
 
     if (data.success) {
-      alert('Login successful!')
-      // Redirect หรือกระทำอื่น ๆ ตามต้องการ
+      alert('Login successful!');
+      localStorage.setItem('loggedIn', 'true'); // เพิ่มบรรทัดนี้: เก็บสถานะการเข้าสู่ระบบ
+      router.push({ name: 'dashboard' });
     } else {
-      error.value = 'Invalid username or password'
+      error.value = 'Invalid username or password';
     }
   } catch (e) {
-    error.value = 'Error connecting to server'
+    error.value = 'Error connecting to server';
   }
 }
 </script>
