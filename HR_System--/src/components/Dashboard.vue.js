@@ -1,9 +1,27 @@
+import { useRouter } from 'vue-router';
 export default (await import('vue')).defineComponent({
     name: 'OwnerDashboard',
     data() {
-        return {};
+        return {
+            showTaskMenuOverlay: false,
+        };
     },
-    methods: {},
+    methods: {
+        showTaskMenu() {
+            this.showTaskMenuOverlay = true;
+        },
+        closeTaskMenu() {
+            this.showTaskMenuOverlay = false;
+        },
+        goToAssessmentReviewPage() {
+            this.showTaskMenuOverlay = false;
+            this.$router.push('/assessment-review');
+        },
+    },
+    setup() {
+        const router = useRouter();
+        return { router };
+    },
 });
 const __VLS_ctx = {};
 let __VLS_components;
@@ -16,6 +34,7 @@ let __VLS_directives;
 /** @type {__VLS_StyleScopedClasses['card-icon']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-icon']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-icon']} */ ;
+/** @type {__VLS_StyleScopedClasses['task-menu-button']} */ ;
 // CSS variable injection 
 // CSS variable injection end 
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
@@ -47,7 +66,11 @@ __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.d
     ...{ class: "dashboard-content" },
 });
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
+    ...{ onClick: (__VLS_ctx.showTaskMenu) },
     ...{ class: "dashboard-card task-card" },
+});
+__VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
+    ...{ class: "card-content" },
 });
 __VLS_asFunctionalElement(__VLS_intrinsicElements.svg, __VLS_intrinsicElements.svg)({
     ...{ class: "card-icon large" },
@@ -63,6 +86,9 @@ __VLS_asFunctionalElement(__VLS_intrinsicElements.p, __VLS_intrinsicElements.p)(
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
     ...{ class: "dashboard-card employees-card" },
 });
+__VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
+    ...{ class: "card-content" },
+});
 __VLS_asFunctionalElement(__VLS_intrinsicElements.svg, __VLS_intrinsicElements.svg)({
     ...{ class: "card-icon" },
     viewBox: "0 0 24 24",
@@ -76,6 +102,9 @@ __VLS_asFunctionalElement(__VLS_intrinsicElements.p, __VLS_intrinsicElements.p)(
 });
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
     ...{ class: "dashboard-card revenue-card" },
+});
+__VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
+    ...{ class: "card-content" },
 });
 __VLS_asFunctionalElement(__VLS_intrinsicElements.svg, __VLS_intrinsicElements.svg)({
     ...{ class: "card-icon" },
@@ -91,6 +120,9 @@ __VLS_asFunctionalElement(__VLS_intrinsicElements.p, __VLS_intrinsicElements.p)(
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
     ...{ class: "dashboard-card approval-card" },
 });
+__VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
+    ...{ class: "card-content" },
+});
 __VLS_asFunctionalElement(__VLS_intrinsicElements.svg, __VLS_intrinsicElements.svg)({
     ...{ class: "card-icon" },
     viewBox: "0 0 24 24",
@@ -105,6 +137,9 @@ __VLS_asFunctionalElement(__VLS_intrinsicElements.p, __VLS_intrinsicElements.p)(
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
     ...{ class: "dashboard-card expenses-card" },
 });
+__VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
+    ...{ class: "card-content" },
+});
 __VLS_asFunctionalElement(__VLS_intrinsicElements.svg, __VLS_intrinsicElements.svg)({
     ...{ class: "card-icon" },
     viewBox: "0 0 24 24",
@@ -116,6 +151,28 @@ __VLS_asFunctionalElement(__VLS_intrinsicElements.path)({
 __VLS_asFunctionalElement(__VLS_intrinsicElements.p, __VLS_intrinsicElements.p)({
     ...{ class: "card-title" },
 });
+if (__VLS_ctx.showTaskMenuOverlay) {
+    __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
+        ...{ class: "task-menu-overlay" },
+    });
+    __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
+        ...{ class: "task-menu" },
+    });
+    __VLS_asFunctionalElement(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({
+        ...{ onClick: (__VLS_ctx.goToAssessmentReviewPage) },
+        ...{ class: "task-menu-button" },
+    });
+    __VLS_asFunctionalElement(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({
+        ...{ class: "task-menu-button" },
+    });
+    __VLS_asFunctionalElement(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({
+        ...{ class: "task-menu-button" },
+    });
+    __VLS_asFunctionalElement(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({
+        ...{ onClick: (__VLS_ctx.closeTaskMenu) },
+        ...{ class: "task-menu-button" },
+    });
+}
 /** @type {__VLS_StyleScopedClasses['owner-dashboard']} */ ;
 /** @type {__VLS_StyleScopedClasses['dashboard-header']} */ ;
 /** @type {__VLS_StyleScopedClasses['logout-button']} */ ;
@@ -124,25 +181,36 @@ __VLS_asFunctionalElement(__VLS_intrinsicElements.p, __VLS_intrinsicElements.p)(
 /** @type {__VLS_StyleScopedClasses['dashboard-content']} */ ;
 /** @type {__VLS_StyleScopedClasses['dashboard-card']} */ ;
 /** @type {__VLS_StyleScopedClasses['task-card']} */ ;
+/** @type {__VLS_StyleScopedClasses['card-content']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-icon']} */ ;
 /** @type {__VLS_StyleScopedClasses['large']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-title']} */ ;
 /** @type {__VLS_StyleScopedClasses['dashboard-card']} */ ;
 /** @type {__VLS_StyleScopedClasses['employees-card']} */ ;
+/** @type {__VLS_StyleScopedClasses['card-content']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-icon']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-title']} */ ;
 /** @type {__VLS_StyleScopedClasses['dashboard-card']} */ ;
 /** @type {__VLS_StyleScopedClasses['revenue-card']} */ ;
+/** @type {__VLS_StyleScopedClasses['card-content']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-icon']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-title']} */ ;
 /** @type {__VLS_StyleScopedClasses['dashboard-card']} */ ;
 /** @type {__VLS_StyleScopedClasses['approval-card']} */ ;
+/** @type {__VLS_StyleScopedClasses['card-content']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-icon']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-title']} */ ;
 /** @type {__VLS_StyleScopedClasses['dashboard-card']} */ ;
 /** @type {__VLS_StyleScopedClasses['expenses-card']} */ ;
+/** @type {__VLS_StyleScopedClasses['card-content']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-icon']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-title']} */ ;
+/** @type {__VLS_StyleScopedClasses['task-menu-overlay']} */ ;
+/** @type {__VLS_StyleScopedClasses['task-menu']} */ ;
+/** @type {__VLS_StyleScopedClasses['task-menu-button']} */ ;
+/** @type {__VLS_StyleScopedClasses['task-menu-button']} */ ;
+/** @type {__VLS_StyleScopedClasses['task-menu-button']} */ ;
+/** @type {__VLS_StyleScopedClasses['task-menu-button']} */ ;
 var __VLS_dollars;
 let __VLS_self;
 //# sourceMappingURL=Dashboard.vue.js.map
