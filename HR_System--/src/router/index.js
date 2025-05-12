@@ -1,7 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../components/Login.vue';
 import Dashboard from '../components/Dashboard.vue';
-import AssessmentReview from '../components/AssessmentReview.vue'; // Import the component
+import AssessmentReview from '../components/AssessmentReview.vue';
+// import SalaryView from '../components/SalaryView.vue'; // Import SalaryView
+import EmployeeList from '../components/EmployeeList.vue'; // Import EmployeeList
 
 const routes = [
   {
@@ -20,10 +22,22 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: '/assessment-review',  // Define the path
-    name: 'assessment-review',    // Give the route a name (optional, but good practice)
-    component: AssessmentReview,  // Specify the component to render
-    meta: { requiresAuth: true } // Optionally, protect this route
+    path: '/assessment-review',
+    name: 'assessment-review',
+    component: AssessmentReview,
+    meta: { requiresAuth: true },
+  },
+  // {
+  //   path: '/salary',
+  //   name: 'salary',
+  //   component: SalaryView, // Add the salary route
+  //   meta: { requiresAuth: true }, // Optional: protect this route
+  // },
+  {
+    path: '/employees',
+    name: 'employees', // Added a name for the route
+    component: EmployeeList, // Add the employee route
+    meta: { requiresAuth: true } // Optional: protect this route
   },
 ];
 
@@ -34,14 +48,14 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
-    // Check if the user is logged in (your authentication logic)
+    // Check if the user is logged in
     if (localStorage.getItem('loggedIn') === 'true') {
-      next();
+      next(); // Allow access to the route
     } else {
-      next('/login');
+      next('/login'); // Redirect to login if not logged in
     }
   } else {
-    next();
+    next(); // Allow access to non-protected routes
   }
 });
 

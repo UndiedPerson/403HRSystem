@@ -22,12 +22,12 @@
         </div>
       </div>
 
-      <div class="dashboard-card employees-card">
+      <div class="dashboard-card employees-card" @click="goToEmployeeList">
         <div class="card-content">
           <svg class="card-icon" viewBox="0 0 24 24">
             <path fill="#4CAF50" d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm0 2c-2.33 0-4.31 1.45-5.16 3.5c.17.05.34.08.51.08h10.3c.17 0 .34-.03.51-.08-.85-2.05-2.83-3.5-5.16-3.5zM16 13c-2 0-3.2 1.4-3.2 1.4h.4c.2.6 1.1 1 2.8 1 .7 0 1.3-.3 1.6-.7l.1-.2c.2-.1.5-.1.7 0l.2.2c.3.4.9.7 1.6.7 1.7 0 2.6-.4 2.8-1h.4s-1.2-1.4-3.2-1.4z"/>
           </svg>
-          <p class="card-title">20000 Employees</p>
+          <p class="card-title">Employee Management</p>
         </div>
       </div>
 
@@ -62,7 +62,7 @@
     <div v-if="showTaskMenuOverlay" class="task-menu-overlay">
       <div class="task-menu">
         <button class="task-menu-button" @click="goToAssessmentReviewPage">ตรวจสอบการประเมิน</button>
-        <button class="task-menu-button">ฟังก์ชันอื่นๆ 1</button>
+        <button class="task-menu-button" @click="goToEmployeeListFromTask">ไปที่หน้าพนักงาน</button>
         <button class="task-menu-button">ฟังก์ชันอื่นๆ 2</button>
         <button class="task-menu-button" @click="closeTaskMenu">ปิด</button>
       </div>
@@ -90,6 +90,13 @@ export default {
     goToAssessmentReviewPage() {
       this.showTaskMenuOverlay = false;
       this.$router.push('/assessment-review');
+    },
+    goToEmployeeList() {
+      this.$router.push('/employees'); // Assuming your EmployeeList route is '/employees'
+    },
+    goToEmployeeListFromTask() {
+      this.showTaskMenuOverlay = false;
+      this.$router.push('/employees'); // Assuming your EmployeeList route is '/employees'
     },
   },
   setup() {
