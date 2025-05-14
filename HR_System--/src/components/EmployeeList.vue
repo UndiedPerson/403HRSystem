@@ -12,7 +12,11 @@
 
     <div class="list-controls">
       <input type="text" v-model="searchQuery" placeholder="ค้นหาพนักงาน..."
-             :style="{ backgroundColor: theme.inputBackground, color: theme.inputTextColor, borderColor: theme.inputBorderColor, boxShadow: theme.inputBoxShadow }">
+             :style="{ backgroundColor: theme.inputBackground, color: theme.inputTextColor, borderColor: theme.inputBorderColor, boxShadow: theme.inputBoxShadow }"
+             class="search-input">
+      <button @click="searchEmployees" :style="{ backgroundColor: theme.addButtonBackground, color: theme.addButtonTextColor, boxShadow: theme.addButtonBoxShadow }">
+        ค้นหา
+      </button>
       <button @click="openAddForm" :style="{ backgroundColor: theme.addButtonBackground, color: theme.addButtonTextColor, boxShadow: theme.addButtonBoxShadow }">
         เพิ่มพนักงาน
       </button>
@@ -46,15 +50,34 @@
           </button>
         </div>
       </div>
-      <div v-if="filteredEmployees.length === 0" class="no-results">ไม่พบพนักงาน</div>
     </div>
 
-    <!-- Modal Delete Confirmation -->
+    <div v-if="!filteredEmployees.length && !loading && !error" class="no-results">
+      ไม่พบข้อมูลพนักงาน
+    </div>
+
+    <EmployeeForm v-if="showForm" :employee="selectedEmployee" @employee-saved="fetchEmployees" @close="closeForm" :theme="theme" />
+
+    <!-- Delete Confirmation Modal -->
     <div v-if="showDeleteModal" class="modal-overlay">
       <div class="modal-content">
-        <h3>ยืนยันการลบพนักงาน</h3>
+        <div class="modal-header">
+          <h3>ยืนยันการลบพนักงาน</h3>
+        </div>
+        <div v-if="employeeToDelete">
+          <p><strong>ID พนักงาน:</strong> {{ employeeToDelete.id }}</p>
+          <p><strong>ชื่อ:</strong> {{ employeeToDelete.name }}</p>
+          <p><strong>ตำแหน่ง:</strong> {{ employeeToDelete.position }}</p>
+          <p><strong>อีเมล:</strong> {{ employeeToDelete.email }}</p>
+        </div>
         <p>กรุณาพิมพ์ <strong>"DELETE THIS EMPLOYEE"</strong> เพื่อยืนยัน</p>
-        <input type="text" v-model="deleteConfirmationText" placeholder='พิมพ์ "DELETE THIS EMPLOYEE"' />
+        <input
+          type="text"
+          v-model="deleteConfirmationText"
+          :class="{ 'invalid-input': deleteConfirmationText && deleteConfirmationText !== 'DELETE THIS EMPLOYEE' }"
+          placeholder='พิมพ์ "DELETE THIS EMPLOYEE"'
+        />
+        <p class="error-text" v-if="deleteError">{{ deleteError }}</p>
         <div class="modal-actions">
           <button class="cancel-button" @click="cancelDelete">ยกเลิก</button>
           <button class="confirm-button" :disabled="deleteConfirmationText !== 'DELETE THIS EMPLOYEE'" @click="confirmDelete">
@@ -63,8 +86,6 @@
         </div>
       </div>
     </div>
-
-    <EmployeeForm v-if="showForm" :employee="selectedEmployee" @employee-saved="fetchEmployees" @close="closeForm" :theme="theme" />
   </div>
 </template>
 
@@ -108,12 +129,15 @@ export default {
       loading: false,
       error: null,
       showDeleteModal: false,
-      employeeToDelete: null,
       deleteConfirmationText: '',
+      employeeToDelete: null,
+      deleteError: '',
+      autoRefresh: null,
     };
   },
   computed: {
     filteredEmployees() {
+      if (!this.searchQuery) return this.employees;
       return this.employees.filter(employee =>
         employee.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
         employee.position.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
@@ -134,8 +158,63 @@ export default {
         this.loading = false;
       }
     },
+    async searchEmployees() {
+      if (!this.searchQuery.trim()) {
+        this.fetchEmployees();
+        return;
+      }
+
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await axios.get(`${API_BASE}read_one.php?search=${this.searchQuery}`);
+        this.employees = response.data;
+      } catch (err) {
+        this.error = 'ไม่สามารถค้นหาข้อมูลพนักงานได้';
+      } finally {
+        this.loading = false;
+      }
+    },
+    openDeleteModal(employee) {
+      this.employeeToDelete = employee;
+      this.showDeleteModal = true;
+      this.deleteConfirmationText = '';
+      this.deleteError = '';
+    },
+    cancelDelete() {
+      this.showDeleteModal = false;
+      this.deleteConfirmationText = '';
+      this.employeeToDelete = null;
+      this.deleteError = '';
+    },
+    async confirmDelete() {
+  if (this.deleteConfirmationText === 'DELETE THIS EMPLOYEE') {
+    try {
+      const response = await axios.post(`${API_BASE}delete.php`, {
+        id: this.employeeToDelete.id,
+        confirm: this.deleteConfirmationText // ส่งคำยืนยันไปในคำขอ
+      });
+
+      if (response.data.success) {
+        this.fetchEmployees();  // รีเฟรชข้อมูลพนักงาน
+        this.cancelDelete();    // ปิด modal
+      } else {
+        this.deleteError = response.data.message;  // แสดงข้อความข้อผิดพลาดจาก PHP
+      }
+    } catch (error) {
+      console.error('Error deleting employee:', error);
+      this.deleteError = 'เกิดข้อผิดพลาดในการลบพนักงาน';
+    }
+  } else {
+    this.deleteError = 'กรุณาพิมพ์ "DELETE THIS EMPLOYEE" เพื่อยืนยันการลบ';
+  }
+},
+
+
     editEmployee(employee) {
+      // Create a copy of the employee data without the status field
       this.selectedEmployee = { ...employee };
+      delete this.selectedEmployee.status;  // Exclude the status field
       this.showForm = true;
     },
     openAddForm() {
@@ -145,34 +224,22 @@ export default {
     closeForm() {
       this.showForm = false;
       this.selectedEmployee = null;
-    },
-    openDeleteModal(employee) {
-      this.employeeToDelete = employee;
-      this.deleteConfirmationText = '';
-      this.showDeleteModal = true;
-    },
-    cancelDelete() {
-      this.showDeleteModal = false;
-      this.employeeToDelete = null;
-    },
-    async confirmDelete() {
-      try {
-        await axios.get(`${API_BASE}delete.php?id=${this.employeeToDelete.id}&confirm=DELETE THIS EMPLOYEE`);
-        this.fetchEmployees();
-        this.cancelDelete();
-      } catch (error) {
-        console.error('Error deleting employee:', error);
-      }
     }
   },
   mounted() {
     this.fetchEmployees();
-    setInterval(this.fetchEmployees, 5000);
+    this.autoRefresh = setInterval(this.fetchEmployees, 5000);
+  },
+  beforeUnmount() {
+    clearInterval(this.autoRefresh);
   }
 };
 </script>
 
 <style scoped>
+.search-input {
+  width: 300px;
+}
 .employee-list-container {
   padding: 20px;
 }
@@ -197,16 +264,16 @@ export default {
   border-radius: 5px 5px 0 0;
 }
 .nav-tab.active {
-  background-color: #840CFE;
+  background-color: #840cfe;
   color: white;
 }
 .list-controls {
   display: flex;
-  justify-content: space-between;
+  gap: 10px;
   align-items: center;
   margin-bottom: 20px;
 }
-.list-controls input[type="text"] {
+.list-controls input[type='text'] {
   width: 200px;
   padding: 10px;
   border-radius: 5px;
@@ -223,8 +290,6 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
-  max-height: 600px;
-  overflow-y: auto;
 }
 .employee-card {
   border: 1px solid #ccc;
@@ -248,9 +313,7 @@ export default {
 }
 .employee-position,
 .employee-email,
-.employee-status,
-.employee-branch,
-.employee-hire-date {
+.employee-status {
   font-size: 14px;
   color: #666;
   margin-bottom: 5px;
@@ -268,67 +331,52 @@ export default {
   cursor: pointer;
   font-weight: bold;
 }
-.no-results {
-  text-align: center;
-  color: #888;
-  font-style: italic;
-}
-
-/* Modal */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
 }
 .modal-content {
   background: white;
-  padding: 30px;
-  border-radius: 10px;
-  width: 400px;
-  max-width: 90%;
-  text-align: center;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
 }
-.modal-content h3 {
+.modal-header {
   margin-bottom: 10px;
-}
-.modal-content input {
-  width: 100%;
-  padding: 10px;
-  margin: 15px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
 }
 .modal-actions {
   display: flex;
-  justify-content: space-between;
-}
-.confirm-button {
-  background-color: red;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  flex: 1;
-  margin-left: 10px;
-}
-.cancel-button {
-  background-color: #ccc;
-  color: #333;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  flex: 1;
-  margin-right: 10px;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
 }
 .confirm-button:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
+}
+.invalid-input {
+  border: 1px solid red;
+  background-color: #ffe5e5;
+  padding: 8px;
+  width: 100%;
+  margin-top: 10px;
+}
+.error-text {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+.no-results {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+  margin-top: 20px;
 }
 </style>
