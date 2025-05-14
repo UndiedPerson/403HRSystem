@@ -5,6 +5,7 @@ import AssessmentReview from '../components/AssessmentReview.vue';
 // import SalaryView from '../components/SalaryView.vue'; // Import SalaryView
 import EmployeeList from '../components/EmployeeList.vue'; // Import EmployeeList
 import LeaveHistory from '../components/LeaveHistory.vue';
+import ApprovalRequest from '../components/ApprovalRequest.vue';
 
 const routes = [
   {
@@ -43,9 +44,13 @@ const routes = [
   {path: '/leave-History',
     name: 'leave-History', // Added a name for the route
     component: LeaveHistory, // Add the employee route
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true }},
 
-  }
+{ path: '/approval-request',
+    name: 'approval-request', // Added a name for the route
+    component: ApprovalRequest, // Add the employee route
+    meta: { requiresAuth: true }
+    },
 ];
 
 const router = createRouter({

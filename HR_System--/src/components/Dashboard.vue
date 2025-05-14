@@ -40,7 +40,7 @@
         </div>
       </div>
 
-      <div class="dashboard-card approval-card">
+      <div class="dashboard-card approval-card" @click="GotoApprovalRequest">
         <div class="card-content">
           <svg class="card-icon" viewBox="0 0 24 24">
             <path fill="#F44336" d="M21 3h-6.18C13.9 3 13 3.9 13 5.06V19c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V5.06C23 3.9 22.1 3 21 3zM15 11h6v2h-6v-2zm0 4h6v2h-6v-2zM3 17h8v2H3v-2zm0-4h8v2H3v-2zm0-4h8v2H3V9z"/>
@@ -97,6 +97,9 @@ export default {
     goToEmployeeListFromTask() {
       this.showTaskMenuOverlay = false;
       this.$router.push('/employees'); // Assuming your EmployeeList route is '/employees'
+    },
+    GotoApprovalRequest() {
+      this.$router.push('/approval-request'); // Assuming your EmployeeList route is '/employees'
     },
   },
   setup() {
