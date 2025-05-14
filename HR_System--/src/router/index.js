@@ -4,6 +4,7 @@ import Dashboard from '../components/Dashboard.vue';
 import AssessmentReview from '../components/AssessmentReview.vue';
 // import SalaryView from '../components/SalaryView.vue'; // Import SalaryView
 import EmployeeList from '../components/EmployeeList.vue'; // Import EmployeeList
+import LeaveHistory from '../components/LeaveHistory.vue';
 
 const routes = [
   {
@@ -39,6 +40,12 @@ const routes = [
     component: EmployeeList, // Add the employee route
     meta: { requiresAuth: true } // Optional: protect this route
   },
+  {path: '/leave-History',
+    name: 'leave-History', // Added a name for the route
+    component: LeaveHistory, // Add the employee route
+    meta: { requiresAuth: true }
+
+  }
 ];
 
 const router = createRouter({

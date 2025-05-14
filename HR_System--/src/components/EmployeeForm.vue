@@ -35,7 +35,7 @@
     v-model="formData.contact_number"
     @input="validateContactNumber"
     maxlength="10"
-    :readonly="isEditMode"
+     required :readonly="isEditMode"
   />
   <p v-if="contactNumberError" class="input-error">{{ contactNumberError }}</p>
 

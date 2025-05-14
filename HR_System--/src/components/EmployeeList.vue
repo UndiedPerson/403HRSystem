@@ -6,7 +6,9 @@
 
     <div class="navigation-tabs">
       <button class="nav-tab active">พนักงาน</button>
+      <router-link to="/leave-history">
       <button class="nav-tab">ประวัติการลา</button>
+    </router-link>
       <button class="nav-tab">รายงาน</button>
     </div>
 
