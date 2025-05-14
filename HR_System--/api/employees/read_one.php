@@ -9,7 +9,7 @@ if ($conn->connect_error) {
 
 $id = isset($_GET['id']) ? $_GET['id'] : die(json_encode(array("message" => "No ID provided.")));
 
-$query = "SELECT id, name, position, department, hire_date, contact_number, email, image_path FROM employees WHERE id = ?";
+$query = "SELECT id, name, position, branch, hire_date, contact_number, email, image_path FROM employees WHERE id = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $id);
 $stmt->execute();
