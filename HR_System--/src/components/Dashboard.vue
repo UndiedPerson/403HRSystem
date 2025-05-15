@@ -32,21 +32,21 @@
         </div>
       </div>
 
-      <div class="dashboard-card revenue-card">
-        <div class="card-content">
-          <svg class="card-icon" viewBox="0 0 24 24">
-            <path fill="#FFC107" d="M22 11V9L12 2L2 9v2h2v9c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-9h2zm-4 8h-4v-4h4v4zm-6 0h-4v-4h4v4zm-6 0H4v-4h4v4zM4 11l8-5.5L20 11H4z"/>
-          </svg>
-          <p class="card-title">Sum Revenue 5M</p>
-        </div>
-      </div>
-
       <div class="dashboard-card approval-card" @click="GotoApprovalRequest">
         <div class="card-content">
           <svg class="card-icon" viewBox="0 0 24 24">
             <path fill="#F44336" d="M21 3h-6.18C13.9 3 13 3.9 13 5.06V19c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V5.06C23 3.9 22.1 3 21 3zM15 11h6v2h-6v-2zm0 4h6v2h-6v-2zM3 17h8v2H3v-2zm0-4h8v2H3v-2zm0-4h8v2H3V9z"/>
           </svg>
           <p class="card-title">Approval Request</p>
+        </div>
+      </div>
+
+      <div class="dashboard-card revenue-card">
+        <div class="card-content">
+          <svg class="card-icon" viewBox="0 0 24 24">
+            <path fill="#FFC107" d="M22 11V9L12 2L2 9v2h2v9c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-9h2zm-4 8h-4v-4h4v4zm-6 0h-4v-4h4v4zm-6 0H4v-4h4v4zM4 11l8-5.5L20 11H4z"/>
+          </svg>
+          <p class="card-title">Sum Revenue 5M</p>
         </div>
       </div>
 
@@ -64,7 +64,7 @@
       <div class="task-menu">
         <button class="task-menu-button" @click="goToAssessmentReviewPage">ตรวจสอบการประเมิน</button>
         <button class="task-menu-button" @click="goToEmployeeListFromTask">ไปที่หน้าพนักงาน</button>
-        <button class="task-menu-button">ฟังก์ชันอื่นๆ 2</button>
+        <button class="task-menu-button" @click="goToSalaryManagement">ไปที่หน้าจัดการเงินเดือน</button>
         <button class="task-menu-button" @click="closeTaskMenu">ปิด</button>
       </div>
     </div>
@@ -101,6 +101,9 @@ export default {
     },
     GotoApprovalRequest() {
       this.$router.push('/approval-request'); // Assuming your EmployeeList route is '/employees'
+    },
+    goToSalaryManagement() {
+      this.$router.push('/salaries-management'); // Assuming your EmployeeList route is '/employees'
     },
     logout() {
   localStorage.removeItem('loggedIn');  // ลบ token หรือ flag ที่ใช้ตรวจสอบ login
