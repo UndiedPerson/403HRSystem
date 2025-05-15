@@ -35,14 +35,14 @@
               @click="updateStatus(leave.LeaveID, 'approved')"
               class="approve-button"
             >
-              อนุมัติ
+              approved
             </button>
             <button
               v-if="leave.status === 'waiting'"
               @click="updateStatus(leave.LeaveID, 'declined')"
               class="decline-button"
             >
-              ปฏิเสธ
+              decline
             </button>
             <span v-else>-</span>
           </td>
@@ -70,24 +70,30 @@ export default {
   },
   methods: {
     async fetchRequests() {
-      this.loading = true;
-      this.error = null;
-      this.message = null;
-      try {
-        const res = await axios.get(
-          "http://127.0.0.1/HrSystem_project/Human-Resource-Management-System_System_Analysis_and_Design_Project/HR_System--/api/leave_request/get_all_leave_requests.php"
-        );
-        if (Array.isArray(res.data)) {
-          this.requests = res.data.sort((a, b) => a.LeaveID - b.LeaveID);
-        } else {
-          this.requests = [];
-        }
-      } catch (err) {
-        this.error = "ไม่สามารถโหลดข้อมูลได้";
-        console.error(err);
-      } finally {
-        this.loading = false;
-      }
+  this.loading = true;
+  this.error = null;
+  this.message = null;
+  try {
+    const res = await axios.get(
+      "http://127.0.0.1/HrSystem_project/Human-Resource-Management-System_System_Analysis_and_Design_Project/HR_System--/api/leave_request/get_all_leave_requests.php"
+    );
+    if (Array.isArray(res.data)) {
+      this.requests = res.data.sort((a, b) => {
+        // ให้ waiting ขึ้นก่อน
+        if (a.status === "waiting" && b.status !== "waiting") return -1;
+        if (a.status !== "waiting" && b.status === "waiting") return 1;
+        // ถ้า status เหมือนกัน ให้เรียงตาม LeaveID
+        return a.LeaveID - b.LeaveID;
+      });
+    } else {
+      this.requests = [];
+    }
+  } catch (err) {
+    this.error = "ไม่สามารถโหลดข้อมูลได้";
+    console.error(err);
+  } finally {
+    this.loading = false;
+  }
     },
     async updateStatus(LeaveID, status) {
       this.error = null;

@@ -127,7 +127,7 @@ export default {
 }
 
 .dashboard-header {
-  background-color: #9400D3;
+  background-color: #840cfe;
   color: white;
   padding: 20px 30px;
   display: flex;

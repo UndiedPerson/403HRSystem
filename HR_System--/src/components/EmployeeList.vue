@@ -1,7 +1,9 @@
 <template>
   <div class="employee-list-container">
     <div class="header" :style="{ backgroundColor: theme.headerBackground, color: theme.headerTextColor }">
-      <h2>พนักงานทั้งหมด</h2>
+      <h2>พนักงานทั้งหมด
+        <button @click="goToDashboard" class="dashboard-button">Dashboard</button>
+      </h2>
     </div>
 
     <div class="navigation-tabs">
@@ -226,8 +228,12 @@ export default {
     closeForm() {
       this.showForm = false;
       this.selectedEmployee = null;
-    }
+    },
+    goToDashboard() {
+    this.$router.push('/dashboard');
   },
+  },
+  
   mounted() {
     this.fetchEmployees();
     this.autoRefresh = setInterval(this.fetchEmployees, 5000);
@@ -239,6 +245,7 @@ export default {
 </script>
 
 <style scoped>
+
 .search-input {
   width: 300px;
 }
@@ -381,4 +388,19 @@ export default {
   font-style: italic;
   margin-top: 20px;
 }
+.dashboard-button {
+  position: absolute;
+  top: 50%;
+  right: 100px;
+  transform: translateY(-1300%);
+  background-color: #f4c542; /* สีเหลือง */
+  color: black;
+  border: none;
+  padding: 8px 14px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
 </style>
