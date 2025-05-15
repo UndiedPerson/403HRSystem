@@ -1,18 +1,23 @@
 <?php
-
+// Allow CORS
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
+// ✅ ตอบกลับทันทีถ้าเป็น OPTIONS (preflight)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
 include '../config/database.php';
 
-// รับ JSON แค่ครั้งเดียว
+// รับ JSON
 $rawInput = file_get_contents("php://input");
-file_put_contents("debug_input.json", $rawInput); // Debug log
 $data = json_decode($rawInput);
 
-// ตรวจสอบข้อมูลที่ส่งเข้ามา
+// ตรวจสอบข้อมูล
 if (!isset($data->LeaveID) || !in_array($data->status, ['approved', 'declined'])) {
     http_response_code(400);
     echo json_encode(["message" => "Invalid request"]);
@@ -26,7 +31,7 @@ if ($conn->connect_error) {
     exit;
 }
 
-// ตรวจสอบสถานะปัจจุบัน
+// ตรวจสอบว่าสถานะเป็น waiting ก่อน
 $check = $conn->prepare("SELECT status FROM leave_history WHERE LeaveID = ?");
 $check->bind_param("i", $data->LeaveID);
 $check->execute();
