@@ -40,7 +40,7 @@
         </div>
       </div>
 
-      <div class="dashboard-card revenue-card">
+      <div class="dashboard-card revenue-card" @click="gotoRevenue">
         <div class="card-content">
           <svg class="card-icon" viewBox="0 0 24 24">
             <path fill="#FFC107" d="M22 11V9L12 2L2 9v2h2v9c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-9h2zm-4 8h-4v-4h4v4zm-6 0h-4v-4h4v4zm-6 0H4v-4h4v4zM4 11l8-5.5L20 11H4z"/>
@@ -108,6 +108,9 @@ export default {
     goToSalaryManagement() {
       this.$router.push('/salaries-management');
     },
+    gotoRevenue() {
+      this.$router.push('/revenue');
+    },
     logout() {
       localStorage.removeItem('loggedIn');
       localStorage.removeItem('username');
@@ -133,7 +136,7 @@ export default {
 }
 
 .dashboard-header {
-  background-color: #9101FF;
+  background-color: #840CFE;
   color: white;
   padding: 18px 25px;
   display: flex;

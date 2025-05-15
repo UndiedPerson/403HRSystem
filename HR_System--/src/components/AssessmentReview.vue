@@ -2,7 +2,7 @@
     <div class="assessment-review-container">
       <header class="assessment-review-header">
         <h2>ตรวจสอบการประเมิน</h2>
-        <button class="assessment-review-back-button" @click="goBackToDashboard">กลับไปที่ Dashboard</button>
+        <button class="assessment-review-back-button" @click="goToDashboard">กลับไปที่ Dashboard</button>
       </header>
   
       <div v-if="loading" class="assessment-review-loading">
@@ -131,9 +131,9 @@
       closeAssessmentDetail() {
         this.selectedEmployee = null;
       },
-      goBackToDashboard() {
-        this.$emit('go-back-to-dashboard');
-      },
+        goToDashboard() {
+    this.$router.push('/dashboard');
+  }
     },
     mounted() {
       this.fetchAssessmentData();
@@ -155,7 +155,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    background-color: #9400D3;
+    background-color: #840CFE;
     color: white;
     padding: 10px 20px;
     border-radius: 5px;

@@ -7,6 +7,7 @@ import EmployeeList from '../components/EmployeeList.vue'; // Import EmployeeLis
 import LeaveHistory from '../components/LeaveHistory.vue';
 import ApprovalRequest from '../components/ApprovalRequest.vue';
 import SalaryManagement from '../components/SalaryManagement.vue';
+import Revenue from '../components/Revenue.vue';
 
 const routes = [
   {
@@ -56,6 +57,11 @@ const routes = [
     { path: '/salaries-management',
     name: 'salaries-management', // Added a name for the route
     component: SalaryManagement, // Add the employee route
+    meta: { requiresAuth: true }
+    },
+    { path: '/revenue',
+    name: 'revenue', // Added a name for the route
+    component: Revenue, // Add the employee route
     meta: { requiresAuth: true }
     },
 ];
