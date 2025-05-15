@@ -2,7 +2,8 @@
   <div class="owner-dashboard">
     <header class="dashboard-header">
       <h1>Owner Dashboard</h1>
-      <button class="logout-button">Logout</button>
+      <button class="logout-button" @click="logout">Logout</button>
+
     </header>
 
     <div class="search-bar">
@@ -101,6 +102,11 @@ export default {
     GotoApprovalRequest() {
       this.$router.push('/approval-request'); // Assuming your EmployeeList route is '/employees'
     },
+    logout() {
+  localStorage.removeItem('loggedIn');  // ลบ token หรือ flag ที่ใช้ตรวจสอบ login
+  this.$router.push('/login'); // ส่งกลับไปหน้า login
+}
+
   },
   setup() {
     const router = useRouter();

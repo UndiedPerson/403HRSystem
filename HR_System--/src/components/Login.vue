@@ -29,6 +29,7 @@ onMounted(() => {
   // ตรวจสอบว่า router พร้อมใช้งานหรือไม่ (โดยทั่วไปไม่จำเป็นต้องทำใน setup)
 });
 
+
 async function handleLogin() {
   error.value = '';
   try {
@@ -40,6 +41,15 @@ async function handleLogin() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: username.value, password: password.value }),
+      // Example: Inside your login() method
+login() {
+  // หลังจากตรวจสอบรหัสผ่านผ่านแล้ว:
+  localStorage.setItem('loggedIn', 'true');
+
+  const lastRoute = localStorage.getItem('lastRoute') || '/dashboard';
+  this.$router.push(lastRoute);
+}
+
     });
 
     const data = await res.json();
@@ -54,6 +64,7 @@ async function handleLogin() {
   } catch (e) {
     error.value = 'Error connecting to server';
   }
+  
 }
 </script>
 

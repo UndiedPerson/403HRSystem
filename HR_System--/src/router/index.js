@@ -59,16 +59,24 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth) {
-    // Check if the user is logged in
-    if (localStorage.getItem('loggedIn') === 'true') {
-      next(); // Allow access to the route
-    } else {
-      next('/login'); // Redirect to login if not logged in
-    }
+  const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+
+  // ถ้าไปหน้า login แต่ล็อกอินอยู่แล้ว ให้ redirect ไปยังหน้าที่เคยอยู่
+  if (to.path === '/login' && isLoggedIn) {
+    const lastRoute = localStorage.getItem('lastRoute') || '/dashboard';
+    next(lastRoute);
+  }
+  // ถ้าหน้านี้ต้องการ auth แต่ยังไม่ได้ login
+  else if (to.meta.requiresAuth && !isLoggedIn) {
+    next('/login');
   } else {
-    next(); // Allow access to non-protected routes
+    // เก็บ path ล่าสุดไว้ (ยกเว้น login)
+    if (to.path !== '/login') {
+      localStorage.setItem('lastRoute', to.fullPath);
+    }
+    next();
   }
 });
+
 
 export default router;

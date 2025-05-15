@@ -36,7 +36,7 @@
   import axios from 'axios';
   
   const FETCH_URL = 'http://127.0.0.1/HrSystem_project/Human-Resource-Management-System_System_Analysis_and_Design_Project/HR_System--/api/leave_request/get_all_leave_requests.php';
-  const UPDATE_URL = 'http://127.0.0.1/HrSystem_project/Human-Resource-Management-System_System_Analysis_and_Design_Project/HR_System--/api/leave_request/update_leave_status.php';
+  // const UPDATE_URL = 'http://127.0.0.1/HrSystem_project/Human-Resource-Management-System_System_Analysis_and_Design_Project/HR_System--/api/leave_request/update_leave_status.php';
   
   export default {
     data() {
@@ -66,28 +66,24 @@
   
       // Update the leave request status
      // Update the leave request status
-     async updateStatus(LeaveID, newStatus) {
-  try {
-    const response = await axios.post(
-      UPDATE_URL,
-      JSON.stringify({ LeaveID, status: newStatus }),
-      {
-        headers: {
-          'Content-Type': 'application/json'
-        },
+     async updateStatus(LeaveID, status) {
+      try {
+        const res = await axios.post(
+          'http://127.0.0.1/.../update_leave_status.php',
+          JSON.stringify({ LeaveID, status }),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        this.message = res.data.message;
+        this.fetchLeaves(); // รีโหลดรายการใหม่
+      } catch (err) {
+        console.error(err);
+        this.message = err.response?.data?.message || "ไม่สามารถอัปเดตสถานะได้";
       }
-    );
-
-    if (response.data.message === "Status updated successfully") {
-      this.fetchRequests(); // อัปเดตข้อมูลใหม่
-    } else {
-      alert(response.data.message || "ไม่สามารถอัปเดตสถานะได้");
     }
-  } catch (err) {
-    console.error("Error updating leave status:", err);
-    alert("ไม่สามารถอัปเดตสถานะได้");
-  }
-}
 
 
     },
