@@ -2,10 +2,10 @@
     <div class="salary-management-container">
       <!-- Header -->
       <header class="page-header">
-        <button @click="goToDashboard" class="btn-back">← กลับไป Dashboard</button>
+        <button @click="goToDashboard" class="btn-back">Dashboard</button>
         <h2>จัดการเงินเดือนพนักงาน</h2>
       </header>
-
+  
       <div class="table-wrapper">
         <table class="salary-table">
           <thead>
@@ -22,16 +22,15 @@
               <td>{{ employee.name }}</td>
               <td>
                 <div v-if="editIndex === index">
-              <input
-                v-model="editedSalary"
-                type="text"
-                class="salary-input"
-                @input="onSalaryInput"
-                />
-
+                  <input
+                    v-model="editedSalary"
+                    type="text"
+                    class="salary-input"
+                    @input="onSalaryInput"
+                  />
                 </div>
                 <div v-else>
-                  {{ employee.salary.toLocaleString() }}
+                  {{ Number(employee.salary).toLocaleString() }}
                 </div>
               </td>
               <td>
@@ -134,6 +133,11 @@
         this.editIndex = null;
         this.editedSalary = null;
       },
+      onSalaryInput(e) {
+        // Optional: allow only numbers (and maybe decimals)
+        const val = e.target.value.replace(/[^\d.]/g, "");
+        this.editedSalary = val;
+      },
       printPdf() {
         const doc = new jsPDF();
         doc.setFontSize(16);
@@ -149,7 +153,7 @@
         this.employees.forEach((emp) => {
           doc.text(emp.id.toString(), 14, y);
           doc.text(emp.name, 60, y);
-          doc.text(emp.salary.toLocaleString(), 140, y, { align: "right" });
+          doc.text(Number(emp.salary).toLocaleString(), 140, y, { align: "right" });
           y += 8;
         });
   
@@ -168,29 +172,58 @@
   };
   </script>
   
-  
   <style scoped>
   .salary-management-container {
+    max-width: 700px;  /* กำหนดความกว้าง max เท่ากับ header */
+    margin: 0 auto;    /* จัดกลางหน้า */
     padding: 20px;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* จัดกึ่งกลาง */
+  }
+  
+  .page-header {
+    padding: 16px;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    border-radius: 8px 8px 0 0;
+    background-color: #840cfe;
+    color: white;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .btn-back {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    background-color: #f4c542; /* สีเหลือง */
+    color: black;
+    border: none;
+    padding: 8px 14px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+  
+  .btn-back:hover {
+    opacity: 0.8;
   }
   
   .table-wrapper {
-    max-width: 700px;
-    width: 100%;
-    overflow-x: auto; /* ให้เลื่อนซ้ายขวาได้ถ้าข้อมูลล้น */
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    width: 100%;           /* เต็ม container */
+    overflow-x: auto;      /* เลื่อนแนวนอนถ้าเนื้อหากว้าง */
+    box-shadow: 0 0 10px #ccc;
     border-radius: 8px;
     margin-bottom: 20px;
   }
   
   .salary-table {
     width: 100%;
+    min-width: 600px;      /* ความกว้างขั้นต่ำของตาราง เพื่อไม่ให้บีบจนข้อมูลล้น */
     border-collapse: collapse;
-    min-width: 600px; /* กำหนดความกว้างขั้นต่ำ */
   }
   
   .salary-table th,
@@ -226,8 +259,9 @@
     border-radius: 6px;
     cursor: pointer;
     color: black;
-    align-self: flex-end; /* จัดปุ่มชิดขวา */
+    align-self: flex-end;
     transition: background-color 0.3s ease;
+    margin-left: auto;
   }
   
   .print-button:hover {
@@ -282,19 +316,5 @@
   .btn-cancel:hover {
     background-color: #a71d2a;
   }
-  .dashboard-button {
-  position: absolute;
-  top: 50%;
-  right: 20px;
-  transform: translateY(-50%);
-  background-color: #f4c542; /* สีเหลือง */
-  color: black;
-  border: none;
-  padding: 8px 14px;
-  font-weight: bold;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
   </style>
   

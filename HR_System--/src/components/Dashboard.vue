@@ -1,16 +1,15 @@
 <template>
   <div class="owner-dashboard">
     <header class="dashboard-header">
-      <h1>Owner Dashboard</h1>
+      <h1>{{ username }} Dashboard</h1>
       <button class="logout-button" @click="logout">Logout</button>
-
     </header>
 
     <div class="search-bar">
       <svg class="search-icon" viewBox="0 0 24 24">
         <path fill="#7C4DFF" d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7 14 5 12 5 9.5S7 5 9.5 5 14 7 14 9.5 12 14 9.5 14z"/>
       </svg>
-      <input type="text" placeholder="Search Data Here">
+      <input type="text" placeholder="Search Data Here" v-model="searchQuery" @input="onSearch" />
     </div>
 
     <div class="dashboard-content">
@@ -60,7 +59,7 @@
       </div>
     </div>
 
-    <div v-if="showTaskMenuOverlay" class="task-menu-overlay">
+    <div v-if="showTaskMenuOverlay" class="task-menu-overlay" @click.self="closeTaskMenu">
       <div class="task-menu">
         <button class="task-menu-button" @click="goToAssessmentReviewPage">ตรวจสอบการประเมิน</button>
         <button class="task-menu-button" @click="goToEmployeeListFromTask">ไปที่หน้าพนักงาน</button>
@@ -72,14 +71,18 @@
 </template>
 
 <script>
-import { useRouter } from 'vue-router';
-
 export default {
-  name: 'OwnerDashboard',
+  name: 'Dashboard',
   data() {
     return {
+      username: '',
       showTaskMenuOverlay: false,
+      searchQuery: '',
     };
+  },
+  mounted() {
+    // ดึง username จาก localStorage
+    this.username = localStorage.getItem('username') || '';
   },
   methods: {
     showTaskMenu() {
@@ -93,114 +96,133 @@ export default {
       this.$router.push('/assessment-review');
     },
     goToEmployeeList() {
-      this.$router.push('/employees'); // Assuming your EmployeeList route is '/employees'
+      this.$router.push('/employees');
     },
     goToEmployeeListFromTask() {
       this.showTaskMenuOverlay = false;
-      this.$router.push('/employees'); // Assuming your EmployeeList route is '/employees'
+      this.$router.push('/employees');
     },
     GotoApprovalRequest() {
-      this.$router.push('/approval-request'); // Assuming your EmployeeList route is '/employees'
+      this.$router.push('/approval-request');
     },
     goToSalaryManagement() {
-      this.$router.push('/salaries-management'); // Assuming your EmployeeList route is '/employees'
+      this.$router.push('/salaries-management');
     },
     logout() {
-  localStorage.removeItem('loggedIn');  // ลบ token หรือ flag ที่ใช้ตรวจสอบ login
-  this.$router.push('/login'); // ส่งกลับไปหน้า login
-}
-
-  },
-  setup() {
-    const router = useRouter();
-    return { router };
+      localStorage.removeItem('loggedIn');
+      localStorage.removeItem('username');
+      this.$router.push('/login');
+    },
+    onSearch() {
+      // เพิ่ม action สำหรับ search ได้ในอนาคต
+      console.log('Search:', this.searchQuery);
+    }
   },
 };
 </script>
 
 <style scoped>
 .owner-dashboard {
-  background-color: #f0f0f0;
+  background-color: #fafafa;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
-  font-family: sans-serif;
+  padding: 25px 15px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .dashboard-header {
-  background-color: #840cfe;
+  background-color: #9101FF;
   color: white;
-  padding: 20px 30px;
+  padding: 18px 25px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  max-width: 1200px;
   box-sizing: border-box;
-  margin-bottom: 20px;
+  border-radius: 6px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 6px rgba(98,0,234,0.4);
 }
 
 .dashboard-header h1 {
   margin: 0;
-  font-size: 2.5em;
+  font-size: 2.2rem;
+  font-weight: 600;
 }
 
 .logout-button {
-  background-color: #FFA500;
+  background-color: #FFC107;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 12px 22px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 1em;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+.logout-button:hover {
+  background-color: #9b7e26;
 }
 
 .search-bar {
-  background-color: #e0e0e0;
-  padding: 10px;
-  border-radius: 5px;
+  background-color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
-  width: 80%;
+  margin-bottom: 25px;
+  width: 100%;
+  max-width: 1200px;
   box-sizing: border-box;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 
 .search-icon {
-  width: 24px;
-  height: 24px;
-  margin-right: 10px;
-  fill: #7C4DFF;
+  width: 26px;
+  height: 26px;
+  margin-right: 14px;
+  fill: #6200ea;
 }
 
 .search-bar input[type="text"] {
   border: none;
-  padding: 8px;
+  padding: 10px 5px;
   flex-grow: 1;
-  font-size: 1em;
+  font-size: 1.1rem;
+  font-weight: 500;
   background-color: transparent;
+  outline: none;
 }
 
 .dashboard-content {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  width: 80%;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+  width: 100%;
+  max-width: 1200px;
   box-sizing: border-box;
 }
 
 .dashboard-card {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  padding: 22px;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  cursor: pointer; /* ทำให้ card เป็น pointer เมื่อ hover */
+  cursor: pointer;
+  transition: box-shadow 0.25s ease;
+}
+
+.dashboard-card:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.18);
 }
 
 .card-content {
@@ -208,30 +230,28 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
   width: 100%;
   height: 100%;
 }
 
 .card-icon {
-  width: 40px;
-  height: 40px;
-  margin-bottom: 10px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 14px;
 }
 
 .card-icon.large {
-  width: 60px;
-  height: 60px;
+  width: 72px;
+  height: 72px;
 }
 
 .card-title {
   margin: 0;
-  font-size: 1.1em;
-  font-weight: bold;
+  font-size: 1.2rem;
+  font-weight: 700;
   color: #333;
 }
 
-/* ปรับสี fill ของไอคอนให้เหมาะสม */
 .task-card .card-icon {
   fill: #64B5F6;
 }
@@ -263,32 +283,34 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 1100;
 }
 
 .task-menu {
   background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 28px 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.22);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
+  width: 300px;
 }
 
 .task-menu-button {
-  background-color: #4CAF50;
+  background-color: #9101FF;
   color: white;
   border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
+  padding: 14px 20px;
+  border-radius: 7px;
   cursor: pointer;
-  margin-bottom: 10px;
-  width: 100%;
-  text-align: center;
+  margin-bottom: 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
 }
 
 .task-menu-button:hover {
-  background-color: #45a049;
+  background-color: #462460;
 }
 </style>

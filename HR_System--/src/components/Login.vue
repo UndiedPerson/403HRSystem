@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const username = ref('');
@@ -25,14 +25,10 @@ const password = ref('');
 const error = ref('');
 const router = useRouter();
 
-onMounted(() => {
-  // ตรวจสอบว่า router พร้อมใช้งานหรือไม่ (โดยทั่วไปไม่จำเป็นต้องทำใน setup)
-});
-
-
 async function handleLogin() {
   error.value = '';
   try {
+    // กำหนด API path ตาม environment
     const apiPath = import.meta.env.VITE_APP_ENV === 'development'
       ? '/api/login.php'
       : import.meta.env.BASE_URL + 'api/login.php';
@@ -41,22 +37,17 @@ async function handleLogin() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: username.value, password: password.value }),
-      // Example: Inside your login() method
-login() {
-  // หลังจากตรวจสอบรหัสผ่านผ่านแล้ว:
-  localStorage.setItem('loggedIn', 'true');
-
-  const lastRoute = localStorage.getItem('lastRoute') || '/dashboard';
-  this.$router.push(lastRoute);
-}
-
     });
 
     const data = await res.json();
 
     if (data.success) {
+      // เก็บสถานะและ username ลง localStorage
+      localStorage.setItem('loggedIn', 'true');
+      localStorage.setItem('username', username.value);
+
       alert('Login successful!');
-      localStorage.setItem('loggedIn', 'true'); // เพิ่มบรรทัดนี้: เก็บสถานะการเข้าสู่ระบบ
+      // ไปที่หน้า dashboard (ต้องแน่ใจว่าชื่อ route คือ 'dashboard')
       router.push({ name: 'dashboard' });
     } else {
       error.value = 'Invalid username or password';
@@ -64,7 +55,6 @@ login() {
   } catch (e) {
     error.value = 'Error connecting to server';
   }
-  
 }
 </script>
 
