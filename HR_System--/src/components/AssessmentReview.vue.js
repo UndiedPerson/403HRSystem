@@ -61,9 +61,9 @@ export default (await import('vue')).defineComponent({
         closeAssessmentDetail() {
             this.selectedEmployee = null;
         },
-        goBackToDashboard() {
-            this.$emit('go-back-to-dashboard');
-        },
+        goToDashboard() {
+            this.$router.push('/dashboard');
+        }
     },
     mounted() {
         this.fetchAssessmentData();
@@ -84,7 +84,7 @@ __VLS_asFunctionalElement(__VLS_intrinsicElements.header, __VLS_intrinsicElement
 });
 __VLS_asFunctionalElement(__VLS_intrinsicElements.h2, __VLS_intrinsicElements.h2)({});
 __VLS_asFunctionalElement(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({
-    ...{ onClick: (__VLS_ctx.goBackToDashboard) },
+    ...{ onClick: (__VLS_ctx.goToDashboard) },
     ...{ class: "assessment-review-back-button" },
 });
 if (__VLS_ctx.loading) {

@@ -1,10 +1,15 @@
-import { useRouter } from 'vue-router';
 export default (await import('vue')).defineComponent({
-    name: 'OwnerDashboard',
+    name: 'Dashboard',
     data() {
         return {
+            username: '',
             showTaskMenuOverlay: false,
+            searchQuery: '',
         };
+    },
+    mounted() {
+        // ดึง username จาก localStorage
+        this.username = localStorage.getItem('username') || '';
     },
     methods: {
         showTaskMenu() {
@@ -17,17 +22,40 @@ export default (await import('vue')).defineComponent({
             this.showTaskMenuOverlay = false;
             this.$router.push('/assessment-review');
         },
-    },
-    setup() {
-        const router = useRouter();
-        return { router };
+        goToEmployeeList() {
+            this.$router.push('/employees');
+        },
+        goToEmployeeListFromTask() {
+            this.showTaskMenuOverlay = false;
+            this.$router.push('/employees');
+        },
+        GotoApprovalRequest() {
+            this.$router.push('/approval-request');
+        },
+        goToSalaryManagement() {
+            this.$router.push('/salaries-management');
+        },
+        gotoRevenue() {
+            this.$router.push('/revenue');
+        },
+        logout() {
+            localStorage.removeItem('loggedIn');
+            localStorage.removeItem('username');
+            this.$router.push('/login');
+        },
+        onSearch() {
+            // เพิ่ม action สำหรับ search ได้ในอนาคต
+            console.log('Search:', this.searchQuery);
+        }
     },
 });
 const __VLS_ctx = {};
 let __VLS_components;
 let __VLS_directives;
 /** @type {__VLS_StyleScopedClasses['dashboard-header']} */ ;
+/** @type {__VLS_StyleScopedClasses['logout-button']} */ ;
 /** @type {__VLS_StyleScopedClasses['search-bar']} */ ;
+/** @type {__VLS_StyleScopedClasses['dashboard-card']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-icon']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-icon']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-icon']} */ ;
@@ -44,7 +72,9 @@ __VLS_asFunctionalElement(__VLS_intrinsicElements.header, __VLS_intrinsicElement
     ...{ class: "dashboard-header" },
 });
 __VLS_asFunctionalElement(__VLS_intrinsicElements.h1, __VLS_intrinsicElements.h1)({});
+(__VLS_ctx.username);
 __VLS_asFunctionalElement(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({
+    ...{ onClick: (__VLS_ctx.logout) },
     ...{ class: "logout-button" },
 });
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
@@ -58,9 +88,11 @@ __VLS_asFunctionalElement(__VLS_intrinsicElements.path)({
     fill: "#7C4DFF",
     d: "M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7 14 5 12 5 9.5S7 5 9.5 5 14 7 14 9.5 12 14 9.5 14z",
 });
-__VLS_asFunctionalElement(__VLS_intrinsicElements.input, __VLS_intrinsicElements.input)({
+__VLS_asFunctionalElement(__VLS_intrinsicElements.input)({
+    ...{ onInput: (__VLS_ctx.onSearch) },
     type: "text",
     placeholder: "Search Data Here",
+    value: (__VLS_ctx.searchQuery),
 });
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
     ...{ class: "dashboard-content" },
@@ -84,6 +116,7 @@ __VLS_asFunctionalElement(__VLS_intrinsicElements.p, __VLS_intrinsicElements.p)(
     ...{ class: "card-title" },
 });
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
+    ...{ onClick: (__VLS_ctx.goToEmployeeList) },
     ...{ class: "dashboard-card employees-card" },
 });
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
@@ -101,23 +134,7 @@ __VLS_asFunctionalElement(__VLS_intrinsicElements.p, __VLS_intrinsicElements.p)(
     ...{ class: "card-title" },
 });
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-    ...{ class: "dashboard-card revenue-card" },
-});
-__VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-    ...{ class: "card-content" },
-});
-__VLS_asFunctionalElement(__VLS_intrinsicElements.svg, __VLS_intrinsicElements.svg)({
-    ...{ class: "card-icon" },
-    viewBox: "0 0 24 24",
-});
-__VLS_asFunctionalElement(__VLS_intrinsicElements.path)({
-    fill: "#FFC107",
-    d: "M22 11V9L12 2L2 9v2h2v9c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-9h2zm-4 8h-4v-4h4v4zm-6 0h-4v-4h4v4zm-6 0H4v-4h4v4zM4 11l8-5.5L20 11H4z",
-});
-__VLS_asFunctionalElement(__VLS_intrinsicElements.p, __VLS_intrinsicElements.p)({
-    ...{ class: "card-title" },
-});
-__VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
+    ...{ onClick: (__VLS_ctx.GotoApprovalRequest) },
     ...{ class: "dashboard-card approval-card" },
 });
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
@@ -130,6 +147,24 @@ __VLS_asFunctionalElement(__VLS_intrinsicElements.svg, __VLS_intrinsicElements.s
 __VLS_asFunctionalElement(__VLS_intrinsicElements.path)({
     fill: "#F44336",
     d: "M21 3h-6.18C13.9 3 13 3.9 13 5.06V19c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V5.06C23 3.9 22.1 3 21 3zM15 11h6v2h-6v-2zm0 4h6v2h-6v-2zM3 17h8v2H3v-2zm0-4h8v2H3v-2zm0-4h8v2H3V9z",
+});
+__VLS_asFunctionalElement(__VLS_intrinsicElements.p, __VLS_intrinsicElements.p)({
+    ...{ class: "card-title" },
+});
+__VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
+    ...{ onClick: (__VLS_ctx.gotoRevenue) },
+    ...{ class: "dashboard-card revenue-card" },
+});
+__VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
+    ...{ class: "card-content" },
+});
+__VLS_asFunctionalElement(__VLS_intrinsicElements.svg, __VLS_intrinsicElements.svg)({
+    ...{ class: "card-icon" },
+    viewBox: "0 0 24 24",
+});
+__VLS_asFunctionalElement(__VLS_intrinsicElements.path)({
+    fill: "#FFC107",
+    d: "M22 11V9L12 2L2 9v2h2v9c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-9h2zm-4 8h-4v-4h4v4zm-6 0h-4v-4h4v4zm-6 0H4v-4h4v4zM4 11l8-5.5L20 11H4z",
 });
 __VLS_asFunctionalElement(__VLS_intrinsicElements.p, __VLS_intrinsicElements.p)({
     ...{ class: "card-title" },
@@ -153,6 +188,7 @@ __VLS_asFunctionalElement(__VLS_intrinsicElements.p, __VLS_intrinsicElements.p)(
 });
 if (__VLS_ctx.showTaskMenuOverlay) {
     __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
+        ...{ onClick: (__VLS_ctx.closeTaskMenu) },
         ...{ class: "task-menu-overlay" },
     });
     __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
@@ -163,9 +199,11 @@ if (__VLS_ctx.showTaskMenuOverlay) {
         ...{ class: "task-menu-button" },
     });
     __VLS_asFunctionalElement(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({
+        ...{ onClick: (__VLS_ctx.goToEmployeeListFromTask) },
         ...{ class: "task-menu-button" },
     });
     __VLS_asFunctionalElement(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({
+        ...{ onClick: (__VLS_ctx.goToSalaryManagement) },
         ...{ class: "task-menu-button" },
     });
     __VLS_asFunctionalElement(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({
@@ -191,12 +229,12 @@ if (__VLS_ctx.showTaskMenuOverlay) {
 /** @type {__VLS_StyleScopedClasses['card-icon']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-title']} */ ;
 /** @type {__VLS_StyleScopedClasses['dashboard-card']} */ ;
-/** @type {__VLS_StyleScopedClasses['revenue-card']} */ ;
+/** @type {__VLS_StyleScopedClasses['approval-card']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-content']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-icon']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-title']} */ ;
 /** @type {__VLS_StyleScopedClasses['dashboard-card']} */ ;
-/** @type {__VLS_StyleScopedClasses['approval-card']} */ ;
+/** @type {__VLS_StyleScopedClasses['revenue-card']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-content']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-icon']} */ ;
 /** @type {__VLS_StyleScopedClasses['card-title']} */ ;
