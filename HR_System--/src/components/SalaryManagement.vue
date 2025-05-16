@@ -12,6 +12,7 @@
             <tr>
               <th>รหัสพนักงาน</th>
               <th>ชื่อพนักงาน</th>
+              <th>ตำแหน่ง</th>
               <th>เงินเดือน (บาท)</th>
               <th>แก้ไข</th>
             </tr>
@@ -20,6 +21,7 @@
             <tr v-for="(employee, index) in employees" :key="employee.id">
               <td>{{ employee.id }}</td>
               <td>{{ employee.name }}</td>
+              <td>{{ employee.position }}</td>
               <td>
                 <div v-if="editIndex === index">
                   <input

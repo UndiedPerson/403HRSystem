@@ -1,10 +1,8 @@
 <?php
 
-
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
 header("Access-Control-Allow-Headers: Content-Type");
-
 header('Content-Type: application/json');
 
 include '../config/database.php';
@@ -18,8 +16,8 @@ if ($conn->connect_error) {
     exit;
 }
 
-// ดึงข้อมูลเงินเดือนร่วมกับชื่อพนักงาน
-$sql = "SELECT salaries.id, employees.name, salaries.salary
+// ดึงข้อมูลเงินเดือนร่วมกับชื่อพนักงาน และตำแหน่ง
+$sql = "SELECT salaries.id, employees.name, employees.position, salaries.salary
         FROM salaries
         JOIN employees ON salaries.id = employees.id";
 
@@ -33,4 +31,3 @@ while ($row = $result->fetch_assoc()) {
 }
 
 echo json_encode($salaries);
-?>
